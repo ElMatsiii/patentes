@@ -21,6 +21,10 @@ export const usePatentes = () => {
 
   useEffect(() => {
     fetchPatentes();
+    const interval = setInterval(() => {
+      fetchPatentes();
+    }, 30000);
+    return () => clearInterval(interval);
   }, [fetchPatentes]);
 
   const createPatente = async (data) => {
@@ -65,6 +69,20 @@ export const usePatentes = () => {
     }
   };
 
+  const registrarSalida = async (id) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await patenteService.registrarSalida(id);
+      await fetchPatentes();
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     patentes,
     loading,
@@ -72,6 +90,7 @@ export const usePatentes = () => {
     fetchPatentes,
     createPatente,
     updatePatente,
-    deletePatente
+    deletePatente,
+    registrarSalida
   };
 };

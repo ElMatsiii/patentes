@@ -4,7 +4,9 @@ export const PatenteForm = ({ patente, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
     torre: '',
     departamento: '',
-    propietario: '',
+    nombre: '',
+    rut: '',
+    estado: 'propietario',
     patente: ''
   });
 
@@ -13,7 +15,9 @@ export const PatenteForm = ({ patente, onSubmit, onCancel }) => {
       setFormData({
         torre: patente.torre || '',
         departamento: patente.departamento || '',
-        propietario: patente.propietario || '',
+        nombre: patente.nombre || '',
+        rut: patente.rut || '',
+        estado: patente.estado || 'propietario',
         patente: patente.patente || ''
       });
     }
@@ -27,9 +31,27 @@ export const PatenteForm = ({ patente, onSubmit, onCancel }) => {
     }));
   };
 
+  const formatRut = (value) => {
+    const cleaned = value.replace(/[^0-9kK]/g, '');
+    if (cleaned.length <= 1) return cleaned;
+    
+    const rut = cleaned.slice(0, -1);
+    const dv = cleaned.slice(-1);
+    
+    return `${rut.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}-${dv}`;
+  };
+
+  const handleRutChange = (e) => {
+    const formatted = formatRut(e.target.value);
+    setFormData(prev => ({
+      ...prev,
+      rut: formatted
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.torre || !formData.propietario || !formData.patente) {
+    if (!formData.torre || !formData.nombre || !formData.rut || !formData.patente) {
       alert('Por favor completa todos los campos obligatorios');
       return;
     }
@@ -45,7 +67,7 @@ export const PatenteForm = ({ patente, onSubmit, onCancel }) => {
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Torre *
+            Torre
           </label>
           <input
             type="text"
@@ -74,14 +96,14 @@ export const PatenteForm = ({ patente, onSubmit, onCancel }) => {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Propietario *
+            Nombre
           </label>
           <input
             type="text"
-            name="propietario"
-            value={formData.propietario}
+            name="nombre"
+            value={formData.nombre}
             onChange={handleChange}
-            placeholder="Nombre del propietario"
+            placeholder="Nombre completo"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             required
           />
@@ -89,7 +111,39 @@ export const PatenteForm = ({ patente, onSubmit, onCancel }) => {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Patente *
+            RUT
+          </label>
+          <input
+            type="text"
+            name="rut"
+            value={formData.rut}
+            onChange={handleRutChange}
+            placeholder="12.345.678-9"
+            maxLength="12"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Estado
+          </label>
+          <select
+            name="estado"
+            value={formData.estado}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            required
+          >
+            <option value="propietario">Propietario</option>
+            <option value="visitante">Visitante</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Patente
           </label>
           <input
             type="text"
