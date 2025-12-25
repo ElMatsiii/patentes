@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Car, AlertTriangle, Clock } from 'lucide-react';
+import { Plus, Search, Car} from 'lucide-react';
 import { usePatentes } from './hooks/usePatentes';
 import { PatenteForm } from './components/PatenteForm';
 import { PatenteList } from './components/PatenteList';

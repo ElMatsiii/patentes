@@ -272,7 +272,8 @@ app.get('/api/stats', async (req, res) => {
   }
 });
 
-app.listen(PORT, async () => {
+app.listen(PORT, '0.0.0.0', async () => {
   await initDB();
   console.log(`Servidor corriendo en puerto ${PORT}`);
+  console.log(`Backend accesible en: http://192.168.1.21:${PORT}`);
 });
